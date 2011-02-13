@@ -5,6 +5,7 @@
 #define _GNU_SOURCE
 
 #include <features.h>
+#include <errno.h>
 
 #undef __UCLIBC_HAS_THREADS__
 #include <bits/uClibc_mutex.h>
