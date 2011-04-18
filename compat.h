@@ -27,4 +27,6 @@
 #define attribute_noreturn
 #define libc_hidden_def(...)
 
+#define __set_errno(_val) errno = _val
+
 #endif
