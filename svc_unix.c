@@ -47,7 +47,7 @@
 #include <rpc/svc.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
-#include <sys/poll.h>
+#include <poll.h>
 #include <errno.h>
 #include <stdlib.h>
 

@@ -20,9 +20,9 @@
 #include <features.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <netipx/ipx.h>
 #include <sys/un.h>
 #if 0
+#include <netipx/ipx.h>
 #include <netash/ash.h>
 #include <netatalk/at.h>
 #include <netax25/ax25.h>
@@ -49,13 +49,13 @@ int __libc_sa_len (sa_family_t af)
       return sizeof (struct sockaddr_rose);
     case AF_PACKET:
       return sizeof (struct sockaddr_ll);
+    case AF_IPX:
+      return sizeof (struct sockaddr_ipx);
 #endif
     case AF_INET:
       return sizeof (struct sockaddr_in);
     case AF_INET6:
       return sizeof (struct sockaddr_in6);
-    case AF_IPX:
-      return sizeof (struct sockaddr_ipx);
     case AF_LOCAL:
       return sizeof (struct sockaddr_un);
     }

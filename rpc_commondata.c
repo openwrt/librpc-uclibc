@@ -27,7 +27,7 @@
  * Mountain View, California  94043
  */
 #include <rpc/rpc.h>
-#include <sys/poll.h>
+#include <poll.h>
 #include <sys/select.h>
 
 #undef svc_fdset

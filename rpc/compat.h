@@ -11,7 +11,7 @@
 #define __UCLIBC_HAS_THREADS__
 #endif
 
-#include <sys/poll.h>
+#include <poll.h>
 #include <pthread.h>
 
 #ifdef __UCLIBC__

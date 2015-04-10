@@ -55,7 +55,7 @@
 #include <unistd.h>
 #include <rpc/rpc.h>
 #include <sys/uio.h>
-#include <sys/poll.h>
+#include <poll.h>
 #include <sys/socket.h>
 #include <rpc/pmap_clnt.h>
 #ifdef USE_IN_LIBIO

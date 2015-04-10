@@ -37,11 +37,16 @@
 #define _RPC_NETDB_H	1
 
 #include <features.h>
+#include <netdb.h>
 
 #define __need_size_t
 #include <stddef.h>
 
 #include "types.h"
+
+#ifndef NETDB_INTERNAL
+#define NETDB_INTERNAL -1
+#endif
 
 __BEGIN_DECLS
 

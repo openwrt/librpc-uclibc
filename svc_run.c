@@ -36,7 +36,7 @@
 
 #include <errno.h>
 #include <unistd.h>
-#include <sys/poll.h>
+#include <poll.h>
 #include <rpc/rpc.h>
 
 /* used by svc_[max_]pollfd */
