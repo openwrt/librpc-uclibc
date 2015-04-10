@@ -53,9 +53,6 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
   struct hostent hostbuf, *h;
   size_t hstbuflen;
   char *hsttmpbuf;
-  struct protoent protobuf, *p;
-  size_t prtbuflen;
-  char *prttmpbuf;
   struct sockaddr_in sin;
   struct sockaddr_un sun;
   int sock;
@@ -115,35 +112,15 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
   memset (sin.sin_zero, 0, sizeof (sin.sin_zero));
   memcpy ((char *) &sin.sin_addr, h->h_addr, h->h_length);
 
-  prtbuflen = 1024;
-  prttmpbuf = alloca (prtbuflen);
-  while (getprotobyname_r (proto, &protobuf, prttmpbuf, prtbuflen, &p) != 0
-	 || p == NULL)
-	if (errno != ERANGE)
-      {
-	struct rpc_createerr *ce = &get_rpc_createerr ();
-	ce->cf_stat = RPC_UNKNOWNPROTO;
-	ce->cf_error.re_errno = EPFNOSUPPORT;
-	return NULL;
-      }
-    else
-      {
-	/* Enlarge the buffer.  */
-	prtbuflen *= 2;
-	prttmpbuf = alloca (prtbuflen);
-      }
 
   sock = RPC_ANYSOCK;
-  switch (p->p_proto)
+  if (!strcmp(proto, "udp"))
     {
-    case IPPROTO_UDP:
       tv.tv_sec = 5;
       tv.tv_usec = 0;
       client = clntudp_create (&sin, prog, vers, tv, &sock);
       if (client == NULL)
-	{
 	  return NULL;
-	}
 #if 0
       /* This is not wanted.  This would disable the user from having
 	 a timeout in the clnt_call() call.  Only a call to cnlt_control()
@@ -151,13 +128,12 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
       tv.tv_sec = 25;
       clnt_control (client, CLSET_TIMEOUT, (char *)&tv);
 #endif
-      break;
-    case IPPROTO_TCP:
+    }
+  else if (!strcmp(proto, "tcp"))
+    {
       client = clnttcp_create (&sin, prog, vers, &sock, 0, 0);
       if (client == NULL)
-	{
 	  return NULL;
-	}
 #if 0
       /* This is not wanted.  This would disable the user from having
 	 a timeout in the clnt_call() call.  Only a call to cnlt_control()
@@ -166,13 +142,12 @@ clnt_create (const char *hostname, u_long prog, u_long vers,
       tv.tv_usec = 0;
       clnt_control (client, CLSET_TIMEOUT, (char *)&tv);
 #endif
-      break;
-    default:
-      {
-	struct rpc_createerr *ce = &get_rpc_createerr ();
-	ce->cf_stat = RPC_SYSTEMERROR;
-	ce->cf_error.re_errno = EPFNOSUPPORT;
-      }
+    }
+  else
+    {
+      struct rpc_createerr *ce = &get_rpc_createerr ();
+      ce->cf_stat = RPC_SYSTEMERROR;
+      ce->cf_error.re_errno = EPFNOSUPPORT;
       return (NULL);
     }
   return client;
