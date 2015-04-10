@@ -42,6 +42,13 @@
 #include <string.h>
 #include <unistd.h>
 
+# define __TEMP_FAILURE_RETRY(expression) \
+  (__extension__							      \
+    ({ long int __result;						      \
+       do __result = (long int) (expression);				      \
+       while (__result == -1L && errno == EINTR);			      \
+       __result; }))
+
 #define SA_LEN(_x)      __libc_sa_len((_x)->sa_family)
 extern int __libc_sa_len(sa_family_t __af) __THROW attribute_hidden;
 
@@ -138,7 +145,7 @@ retry:
 		(void) write(s, num, strlen(num)+1);
 		{
 			socklen_t len = sizeof(from);
-			s3 = TEMP_FAILURE_RETRY(accept(s2,
+			s3 = __TEMP_FAILURE_RETRY(accept(s2,
 					(struct sockaddr *)&from, &len));
 			close(s2);
 			if (s3 < 0) {
